@@ -3,6 +3,16 @@ import { View, Text } from 'react-native';
 
 import QRCodeScanner from "react-native-qrcode-scanner";
 import { RNCamera } from "react-native-camera";
+// import SQLite from 'react-native-sqlite-storage'
+
+// const db = SQLite.openDatabase(
+//   {
+//     name: 'MainDB',
+//     location: 'Default'
+//   },
+//   ()=>{},
+//   error=>{console.log(error)}
+// )
 
 // Encode/decode
 const codeTable = [
@@ -17,19 +27,19 @@ const codeTable = [
 ];
 const decBase = codeTable.length;
 
-function encode(val) {
-  const num = parseInt(val);
-  if (num === 0) {
-      return '0';
-  }
-  let res = '';
-  let temp = num;
-  while (temp > 0) {
-      res = codeTable[temp % decBase] + res;
-      temp = Math.floor(temp / decBase);
-  }
-  return res;
-}
+// function encode(val) {
+//   const num = parseInt(val);
+//   if (num === 0) {
+//       return '0';
+//   }
+//   let res = '';
+//   let temp = num;
+//   while (temp > 0) {
+//       res = codeTable[temp % decBase] + res;
+//       temp = Math.floor(temp / decBase);
+//   }
+//   return res;
+// }
 
 function decode(val) {
   const code = String(val);
@@ -58,6 +68,16 @@ export default function HomeScreen({navigation}) {
       setText('Wrong QrCode')
     }
   }
+
+  // const createTable = () => {
+  //   db.transaction((tx) => {
+  //     tx.executeSql(
+  //       "CREATE TABLE IF NOT EXIST"
+  //       +"History"
+  //       +"(ID INTEGER PRIMARY KEY AUTOINCREMENT, Date TEXT, Ip TEXT)"
+  //     )
+  //   })
+  // }
 
   const containerHeight = '100%'
   const containerWidth = '100%'
