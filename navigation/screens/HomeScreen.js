@@ -3,6 +3,7 @@ import { View, Text } from 'react-native';
 
 import QRCodeScanner from "react-native-qrcode-scanner";
 import { RNCamera } from "react-native-camera";
+import Sound from "react-native-sound";
 // import SQLite from 'react-native-sqlite-storage'
 
 // const db = SQLite.openDatabase(
@@ -53,6 +54,16 @@ function decode(val) {
   return res;
 }
 
+// Play Sound func
+const playsound = () => {
+  const sound = new Sound('scanned1.mp3', Sound.MAIN_BUNDLE, error => {
+    if (error) {
+      console.log('Failed to load sound', error);
+      return;
+    }
+    sound.play()
+  })
+}
 
 export default function HomeScreen({navigation}) {
   const [scanned, setScanned] = useState(false)
@@ -64,6 +75,7 @@ export default function HomeScreen({navigation}) {
       let res = data.split('/')[4].split(':')
       res = [decode(res[0]), decode(res[1]), decode(res[2])]
       setText(`${res}`)
+      playsound()
     } else {
       setText('Wrong QrCode')
     }
