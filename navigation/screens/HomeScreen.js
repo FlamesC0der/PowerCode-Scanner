@@ -4,16 +4,21 @@ import { View, Text } from 'react-native';
 import QRCodeScanner from "react-native-qrcode-scanner";
 import { RNCamera } from "react-native-camera";
 import Sound from "react-native-sound";
-// import SQLite from 'react-native-sqlite-storage'
 
-// const db = SQLite.openDatabase(
-//   {
-//     name: 'MainDB',
-//     location: 'Default'
-//   },
-//   ()=>{},
-//   error=>{console.log(error)}
-// )
+import storage from "../Storage";
+
+// import Storage from "react-native-storage";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
+
+// const storage = new Storage({
+//   size: 1000,
+//   storageBackend: AsyncStorage,
+//   defaultExpires: 1000 * 3600 * 24,
+//   enableCache: true,
+//   sync: {
+//     // 
+//   }
+// })
 
 // Encode/decode
 const codeTable = [
@@ -76,20 +81,22 @@ export default function HomeScreen({navigation}) {
       res = [decode(res[0]), decode(res[1]), decode(res[2])]
       setText(`${res}`)
       playsound()
+
+      // Save data to bd
+      storage.save({
+        key: 'history-13',
+        id: Date.now(),
+        data: [Date.now(), res.join(':')].join('|')
+      })
+
+      storage.getAllDataForKey('history1').then(users => {
+        console.log(users);
+      });
     } else {
-      setText('Wrong QrCode')
+      setText('Invalid QrCode')
     }
   }
 
-  // const createTable = () => {
-  //   db.transaction((tx) => {
-  //     tx.executeSql(
-  //       "CREATE TABLE IF NOT EXIST"
-  //       +"History"
-  //       +"(ID INTEGER PRIMARY KEY AUTOINCREMENT, Date TEXT, Ip TEXT)"
-  //     )
-  //   })
-  // }
 
   const containerHeight = '100%'
   const containerWidth = '100%'
