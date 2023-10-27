@@ -64,7 +64,6 @@ const playsound = () => {
   const sound = new Sound('scanned1.mp3', Sound.MAIN_BUNDLE, error => {
     if (error) {
       console.log('Failed to load sound', error);
-      return;
     }
     sound.play()
   })
@@ -75,6 +74,12 @@ export default function HomeScreen({navigation}) {
   const [text, setText] = useState('')
   
   const HadleQRCodeScanned = ({data}) => {
+    console.log(data)
+    if (data.includes('DEBUG-CODE:CLEARDB')) {
+      storage.clearMapForKey('history-13');
+      setText(`DEBUG-CODE: ${data.split(':')[1]}`)
+      return
+    }
     if (data.includes('http://enip2.ru/c1/')) {
       setScanned(true)
       let res = data.split('/')[4].split(':')
@@ -88,10 +93,6 @@ export default function HomeScreen({navigation}) {
         id: Date.now(),
         data: [Date.now(), res.join(':')].join('|')
       })
-
-      storage.getAllDataForKey('history1').then(users => {
-        console.log(users);
-      });
     } else {
       setText('Invalid QrCode')
     }
@@ -111,7 +112,7 @@ export default function HomeScreen({navigation}) {
         showMarker={true}
       />
       <View style={{height: 50, width: containerWidth, alignItems: "center", backgroundColor: '#222', borderRadius: 20, marginVertical: 20}}>
-        <Text style={{fontSize: 20}}>IP: {text}</Text>
+        <Text style={{fontSize: 20}}>Data: {text}</Text>
       </View>
     </View>
   )
